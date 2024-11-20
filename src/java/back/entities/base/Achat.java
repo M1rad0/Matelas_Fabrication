@@ -7,7 +7,10 @@ package back.entities.base;
 import back.baseconfig.annotations.Column;
 import back.baseconfig.annotations.DefaultValue;
 import back.baseconfig.annotations.Table;
-
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.SQLException;
 /**
  *
  * @author Mirado
@@ -25,9 +28,19 @@ public class Achat {
     double quantite;
     @Column(name="reste")
     double reste;
+    @Column(name="daty_achat")
+    Timestamp dateAchat;
     
     /*Getters and Setters*/
 
+    public Timestamp getDateAchat() {
+        return dateAchat;
+    }
+
+    public void setDateAchat(Timestamp dateAchat) {
+        this.dateAchat = dateAchat;
+    }
+    
     public String getIdAchat() {
         return idAchat;
     }
@@ -70,5 +83,13 @@ public class Achat {
     
     public Achat(){
         
+    }
+    
+    public static void updateResteList(Connection conn, ArrayList<Achat> achats) throws SQLException{
+        String query="UPDATE FROM Achat SET reste=? WHERE id_achat=?";
+        
+        for(Achat achat:achats){
+            
+        }
     }
 }

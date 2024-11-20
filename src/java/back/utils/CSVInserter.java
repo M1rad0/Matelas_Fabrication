@@ -43,7 +43,7 @@ public class CSVInserter {
         this.prixRevient_m3=prixRevient_m3;
     }
     
-    public void readCSV(String filePath) throws Exception {
+    public void readCSVOrdered(String filePath) throws Exception{
         blocs = new ArrayList<>();
         String line;
 
@@ -61,12 +61,11 @@ public class CSVInserter {
                     double largeur = Double.parseDouble(data[2]);
                     double epaisseur = Double.parseDouble(data[3]);
                     double prixRevientPratique = Double.parseDouble(data[4]);
-                    double prixRevientTheorique = 0.0;
                     Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[5], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
                     String idMachine = data[6];
 
                     // Créer un objet Bloc throw automatic en cas d'erreur
-                    Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,conso,prixRevientPratique,false);
+                    Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,prixRevientPratique,conso);
                     
                     blocs.add(bloc);
                 } else {
@@ -80,20 +79,64 @@ public class CSVInserter {
         }
     }
     
+    public void readCSVDisorder(String filePath) throws Exception {
+        blocs = new ArrayList<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            // Sauter l'en-tête si présent
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                // Supposons que le séparateur soit une virgule
+                String[] data = line.split(";");
+
+                if (data.length == 7) {
+                    String val = data[0];
+                    double longueur = Double.parseDouble(data[1]);
+                    double largeur = Double.parseDouble(data[2]);
+                    double epaisseur = Double.parseDouble(data[3]);
+                    double prixRevientPratique = Double.parseDouble(data[4]);
+                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[5], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
+                    String idMachine = data[6];
+
+                    // Créer un objet Bloc throw automatic en cas d'erreur
+                    Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,prixRevientPratique);
+                    
+                    blocs.add(bloc);
+                } else {
+                    System.err.println("Ligne mal formatée : " + line);
+                }
+            }
+            blocs.sort(new CompareByDate());
+            
+            for(Bloc bloc:blocs){
+                bloc.setPrixRevientTheorique(bloc.calculPrixRevientTheorique(conso));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erreur lors de la conversion des données : " + e.getMessage());
+        }
+    }
+    
     public void insert() throws IllegalAccessException,SQLException{
         Connection conn=null;
         try{
             conn=DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
-            GeneralDB<Bloc> gdbBloc=new GeneralDB<Bloc>(Bloc.class);
-            gdbBloc.create(conn, this.blocs, 1000000);
-            conn.commit();
+            Bloc.insert(conn, this.blocs, 100000);
+            
+            //Changer en commit dans un contexte normal
+            //conn.commit();
         }catch(SQLException ex){
             try{
-                conn.rollback(); 
+                if(conn!=null){
+                    conn.rollback(); 
+                }
                 throw ex;
             }catch(SQLException e){
-                e.printStackTrace();
+                throw e;
             }
         }finally{
             if(conn!=null){
@@ -106,7 +149,7 @@ public class CSVInserter {
         ConsommationData consos=new ConsommationData(DatabaseConnection.getConnection());
         CSVInserter inserter=new CSVInserter(consos,3000);
         
-        inserter.readCSV("C:\\Users\\Mirado\\Downloads\\Bloc.csv");
+        inserter.readCSVDisorder("C:\\Users\\Mirado\\Downloads\\Bloc.csv");
         System.out.println(inserter.blocs.size());
         System.out.println("Creation objet reussis");
         
