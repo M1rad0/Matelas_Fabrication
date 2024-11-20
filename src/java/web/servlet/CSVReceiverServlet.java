@@ -44,10 +44,10 @@ public class CSVReceiverServlet extends HttpServlet {
             inserter.readCSVDisordered(filePart.getInputStream());
             
             /*Effectuer l'ensemble des insertions des blocs*/
-            inserter.insert(false);
+            inserter.insert(true);
             
             /*Effectuer l'ensemble des updates des achats*/
-            inserter.updateAchat(false);
+            inserter.updateAchat(true);
             
             response.getWriter().write("OKAY");
         } catch (Exception e) {
