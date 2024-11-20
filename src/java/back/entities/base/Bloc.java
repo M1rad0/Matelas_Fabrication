@@ -161,9 +161,9 @@ public class Bloc extends LLH {
             double restantConstr=volume*prod.getConsommation();
             
             for(Achat achat:lsAchats.get(prod)){
-                if(achat.getDateAchat().after(datyCreation)){
+                /*if(achat.getDateAchat().after(datyCreation)){
                     break;
-                }
+                }*/
                 if(achat.getReste()>=restantConstr){
                     prixRevient+=restantConstr*achat.getPrix_unitaire();
                     achat.setReste(achat.getReste()-restantConstr);

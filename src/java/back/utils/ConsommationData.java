@@ -45,6 +45,7 @@ public class ConsommationData {
         for(Produit prod:produits){
             ArrayList<Achat> achats=(ArrayList)gdbAchat.getWhere(conn,"id_produit=? ORDER BY daty_achat",prod.getIdProduit());
             produitsAchats.put(prod, achats);
+            System.out.println("INSERT DATA FOR"+prod.getIdProduit());
         }
     }
     

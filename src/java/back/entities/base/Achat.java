@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 /**
  *
  * @author Mirado
@@ -85,11 +86,20 @@ public class Achat {
         
     }
     
-    public static void updateResteList(Connection conn, ArrayList<Achat> achats) throws SQLException{
-        String query="UPDATE FROM Achat SET reste=? WHERE id_achat=?";
-        
-        for(Achat achat:achats){
-            
+    public static void updateResteList(Connection conn, ArrayList<Achat> achats) throws SQLException {
+        // La requête SQL utilise les annotations des colonnes pour mapper correctement les champs
+        String query = "UPDATE Achat SET reste = ? WHERE id_achat = ?";
+
+        // Utilisation de PreparedStatement pour éviter les injections SQL et gérer efficacement les paramètres
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            for (Achat achat : achats) {
+                // On remplace les paramètres de la requête par les valeurs des objets Achat
+                stmt.setDouble(1, achat.getReste());
+                stmt.setString(2, achat.getIdAchat());
+
+                // Exécution de l'update
+                stmt.executeUpdate();
+            }
         }
     }
 }

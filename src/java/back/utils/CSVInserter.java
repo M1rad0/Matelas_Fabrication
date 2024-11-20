@@ -3,17 +3,23 @@ package back.utils;
 
 import back.baseconfig.utils.DatabaseConnection;
 import back.baseconfig.utils.GeneralDB;
+import back.entities.base.Achat;
 import back.entities.base.Bloc;
+import back.entities.base.Produit;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -43,11 +49,11 @@ public class CSVInserter {
         this.prixRevient_m3=prixRevient_m3;
     }
     
-    public void readCSVOrdered(String filePath) throws Exception{
+    public void readCSVOrdered(BufferedReader bfr) throws Exception{
         blocs = new ArrayList<>();
         String line;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = bfr) {
             // Sauter l'en-tête si présent
             br.readLine();
 
@@ -79,11 +85,11 @@ public class CSVInserter {
         }
     }
     
-    public void readCSVDisorder(String filePath) throws Exception {
+    public void readCSVDisordered(BufferedReader bfr) throws Exception {
         blocs = new ArrayList<>();
         String line;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = bfr) {
             // Sauter l'en-tête si présent
             br.readLine();
 
@@ -120,7 +126,23 @@ public class CSVInserter {
         }
     }
     
-    public void insert() throws IllegalAccessException,SQLException{
+    public void readCSVOrdered(InputStream input) throws Exception{
+        readCSVOrdered(new BufferedReader(new InputStreamReader(input,"UTF-8")));
+    }
+    
+    public void readCSVDisordered(InputStream input) throws Exception{
+        readCSVDisordered(new BufferedReader(new InputStreamReader(input,"UTF-8")));
+    }
+    
+    public void readCSVOrdered(String filePath) throws Exception{
+        readCSVOrdered(new BufferedReader(new FileReader(filePath)));
+    }
+    
+    public void readCSVDisordered(String filePath) throws Exception{
+        readCSVDisordered(new BufferedReader(new FileReader(filePath)));
+    }
+    
+    public void insert(boolean shouldCommit) throws IllegalAccessException,SQLException{
         Connection conn=null;
         try{
             conn=DatabaseConnection.getConnection();
@@ -128,7 +150,9 @@ public class CSVInserter {
             Bloc.insert(conn, this.blocs, 100000);
             
             //Changer en commit dans un contexte normal
-            //conn.commit();
+            if(shouldCommit){
+                conn.commit();
+            }
         }catch(SQLException ex){
             try{
                 if(conn!=null){
@@ -145,16 +169,36 @@ public class CSVInserter {
         }
     }
     
-    public static void main(String[] args) throws SQLException, Exception{
-        ConsommationData consos=new ConsommationData(DatabaseConnection.getConnection());
-        CSVInserter inserter=new CSVInserter(consos,3000);
-        
-        inserter.readCSVDisorder("C:\\Users\\Mirado\\Downloads\\Bloc.csv");
-        System.out.println(inserter.blocs.size());
-        System.out.println("Creation objet reussis");
-        
-        inserter.insert();
-        System.out.println("Vita");
-                
+    public void updateAchat(boolean shouldCommit) throws SQLException{
+        Connection conn=null;
+        try{
+            conn=DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+            HashMap<Produit,ArrayList<Achat>> map=conso.getProduitsAchats();
+            for(Produit product:map.keySet()){
+                ArrayList<Achat> lsAchats=map.get(product);
+                Achat.updateResteList(conn, lsAchats);
+            }
+            
+            //Changer en commit dans un contexte normal
+            conn.commit();
+        }catch(SQLException ex){
+            try{
+                if(conn!=null){
+                    conn.rollback(); 
+                }
+                throw ex;
+            }catch(SQLException e){
+                throw e;
+            }
+        }finally{
+            if(conn!=null){
+                conn.close();
+            }
+        }
+    }
+
+    public List<Bloc> getBlocs() {
+        return this.blocs;
     }
 }
