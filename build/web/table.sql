@@ -1,6 +1,3 @@
-create database matelasperf;
-\c matelasperf
-
 CREATE TABLE Produit(
     id_produit VARCHAR(10) DEFAULT ('PRD') || LPAD(nextval('form_sequence')::TEXT,4,'0'),
     val VARCHAR(50) ,
