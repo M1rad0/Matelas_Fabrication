@@ -23,6 +23,11 @@ import java.sql.Connection;
  *
  * @author Mirado
  */
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 500, // Taille à partir de laquelle un fichier est écrit sur le disque (10 Mo)
+        maxFileSize = 1024 * 1024 * 500,      // Taille maximale d'un fichier (500 Mo)
+        maxRequestSize = 1024 * 1024 * 1000   // Taille maximale de la requête (1 Go)
+)
 @WebServlet(name = "CSVReceiverServlet", urlPatterns = {"/traitercsv"})
 public class CSVReceiverServlet extends HttpServlet {
     @Override
@@ -39,10 +44,12 @@ public class CSVReceiverServlet extends HttpServlet {
             inserter.readCSVDisordered(filePart.getInputStream());
             
             /*Effectuer l'ensemble des insertions des blocs*/
-            inserter.insert(true);
+            inserter.insert(false);
             
             /*Effectuer l'ensemble des updates des achats*/
-            inserter.updateAchat(true);
+            inserter.updateAchat(false);
+            
+            response.getWriter().write("OKAY");
         } catch (Exception e) {
             response.getWriter().write("Erreur ve : " + e.getMessage());
         }finally {

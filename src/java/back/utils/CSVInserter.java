@@ -181,7 +181,9 @@ public class CSVInserter {
             }
             
             //Changer en commit dans un contexte normal
-            conn.commit();
+            if(shouldCommit){
+                conn.commit();
+            }
         }catch(SQLException ex){
             try{
                 if(conn!=null){
