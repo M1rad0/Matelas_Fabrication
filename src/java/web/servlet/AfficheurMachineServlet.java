@@ -6,7 +6,7 @@ package web.servlet;
 
 import back.baseconfig.utils.DatabaseConnection;
 import back.baseconfig.utils.GeneralDB;
-import back.entities.base.MachineData;
+import back.entities.views.MachineData;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
