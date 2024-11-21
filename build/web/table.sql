@@ -6,7 +6,7 @@ CREATE TABLE Produit(
 );
 
 CREATE TABLE machine(
-    id_machine VARCHAR(10) DEFAULT ('MAC') || LPAD(nextval('mac_sequence')::TEXT,2,'0'),
+    id_machine VARCHAR(10) DEFAULT ('M') || LPAD(nextval('mac_sequence')::TEXT,1,'0'),
     val VARCHAR(50) ,
     PRIMARY KEY(id_machine)
 );
@@ -17,7 +17,7 @@ CREATE TABLE Achat(
     quantite DOUBLE PRECISION,
     PU DOUBLE PRECISION,
     daty_achat TIMESTAMP,
-    reste INTEGER,
+    reste DOUBLE PRECISION,
     PRIMARY KEY(id_achat),
     FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)
 );

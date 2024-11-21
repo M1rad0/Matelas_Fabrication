@@ -14,7 +14,6 @@ CREATE SEQUENCE mac_sequence
     MINVALUE 1
     CACHE 1;
 
-
 CREATE SEQUENCE achat_sequence
     START 1
     INCREMENT 1

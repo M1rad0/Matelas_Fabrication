@@ -3,18 +3,27 @@
     Created on : 20 nov. 2024, 22:47:12
     Author     : Mirado
 --%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+    
 <%@ page import="java.util.List,back.entities.views.MachineData,java.text.DecimalFormat"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navbar -->
+    <%@include file="header.jsp" %>
+
+    <!-- Main Content -->
+    <main class="container">
         <% DecimalFormat formatter=new DecimalFormat("#.########"); %>
-        <table border="1">
+        <table class="table-responsive table-bordered">
             <thead>
                 <tr>
                     <th>
@@ -46,5 +55,9 @@
             <% MachineData bestMachine=machineDatas.get(0); %>
         </table>
         <p>La machine avec le minimum de perte est <%= bestMachine.getIdMachine() %> avec une perte de <%= formatter.format(bestMachine.getPerte()) %></p>
-    </body>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

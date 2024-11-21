@@ -59,29 +59,25 @@ public class CSVInserter {
 
             while ((line = br.readLine()) != null) {
                 // Supposons que le séparateur soit une virgule
-                String[] data = line.split(";");
+                String[] data = line.split(",");
 
-                if (data.length == 7) {
-                    String val = data[0];
+                if (data.length == 6) {
+                    String val = "Bloc";
                     double longueur = Double.parseDouble(data[1]);
                     double largeur = Double.parseDouble(data[2]);
                     double epaisseur = Double.parseDouble(data[3]);
                     double prixRevientPratique = Double.parseDouble(data[4]);
-                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[5], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
-                    String idMachine = data[6];
+                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[0], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
+                    String idMachine = data[5];
 
                     // Créer un objet Bloc throw automatic en cas d'erreur
                     Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,prixRevientPratique,conso);
-                    
+
                     blocs.add(bloc);
                 } else {
-                    System.err.println("Ligne mal formatée : " + line);
+                    throw new Exception("Le nombre de colonnes est inadapte");
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erreur lors de la conversion des données : " + e.getMessage());
         }
     }
     
@@ -95,23 +91,23 @@ public class CSVInserter {
 
             while ((line = br.readLine()) != null) {
                 // Supposons que le séparateur soit une virgule
-                String[] data = line.split(";");
+                String[] data = line.split(",");
 
-                if (data.length == 7) {
-                    String val = data[0];
+                if (data.length == 6) {
+                    String val = "Bloc";
                     double longueur = Double.parseDouble(data[1]);
                     double largeur = Double.parseDouble(data[2]);
                     double epaisseur = Double.parseDouble(data[3]);
                     double prixRevientPratique = Double.parseDouble(data[4]);
-                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[5], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
-                    String idMachine = data[6];
+                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[0], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
+                    String idMachine = data[5];
 
                     // Créer un objet Bloc throw automatic en cas d'erreur
                     Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,prixRevientPratique);
                     
                     blocs.add(bloc);
                 } else {
-                    System.err.println("Ligne mal formatée : " + line);
+                    throw new Exception("Nombre de lignes inadapte");
                 }
             }
             blocs.sort(new CompareByDate());

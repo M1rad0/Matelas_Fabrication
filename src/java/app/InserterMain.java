@@ -18,16 +18,19 @@ public class InserterMain {
         ConsommationData consos=new ConsommationData(DatabaseConnection.getConnection());
         CSVInserter inserter=new CSVInserter(consos,3000);
         
-        inserter.readCSVOrdered("C:\\Users\\Mirado\\Documents\\ITU\\s5\\Architecture_Logiciel\\Projet_2\\Bloc.csv");
+        inserter.readCSVDisordered("C:\\Users\\Mirado\\Desktop\\Data 1M.csv\\random_data_int_1M.csv");
         System.out.println(inserter.getBlocs().size());
         System.out.println("Creation objet reussis");
         
-        /*Set shouldCommit to true in real context*/
-        inserter.insert(false);
-        System.out.println("Vita");
+        //System.out.println(inserter.getBlocs().getLast().getPrixRevientTheorique());
         
         /*Set shouldCommit to true in real context*/
-        inserter.updateAchat(false);
-        System.out.println("Mise a jour des achats réussie");           
+        inserter.insert(true);
+        //System.out.println("Vita");
+        
+        /*Set shouldCommit to true in real context*/
+        inserter.updateAchat(true);
+        //System.out.println("Mise a jour des achats réussie"); 
+        
     }
 }

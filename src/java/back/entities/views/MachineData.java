@@ -6,7 +6,10 @@ package back.entities.views;
 
 import back.baseconfig.annotations.Column;
 import back.baseconfig.annotations.Table;
-
+import back.baseconfig.utils.GeneralDB;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 /**
  *
  * @author Mirado
@@ -53,5 +56,11 @@ public class MachineData {
 
     public void setPerte(double perte) {
         this.perte = perte;
+    }
+    
+    public static ArrayList<MachineData> getDataYear(Connection conn,int year) throws SQLException{
+        GeneralDB<MachineData> gdbMD=new GeneralDB<MachineData>(MachineData.class);
+        String query="SELECT * FROM f_perte_machine_by_year(?)";
+        return gdbMD.getObjects(conn, query, year);
     }
 }
