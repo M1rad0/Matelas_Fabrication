@@ -49,38 +49,6 @@ public class CSVInserter {
         this.prixRevient_m3=prixRevient_m3;
     }
     
-    public void readCSVOrdered(BufferedReader bfr) throws Exception{
-        blocs = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = bfr) {
-            // Sauter l'en-tête si présent
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                // Supposons que le séparateur soit une virgule
-                String[] data = line.split(",");
-
-                if (data.length == 6) {
-                    String val = "Bloc";
-                    double longueur = Double.parseDouble(data[1]);
-                    double largeur = Double.parseDouble(data[2]);
-                    double epaisseur = Double.parseDouble(data[3]);
-                    double prixRevientPratique = Double.parseDouble(data[4]);
-                    Timestamp daty = Timestamp.valueOf(LocalDate.parse(data[0], DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay());
-                    String idMachine = data[5];
-
-                    // Créer un objet Bloc throw automatic en cas d'erreur
-                    Bloc bloc = new Bloc(null, val, idMachine, daty, longueur, largeur, epaisseur,prixRevientPratique,conso);
-
-                    blocs.add(bloc);
-                } else {
-                    throw new Exception("Le nombre de colonnes est inadapte");
-                }
-            }
-        }
-    }
-    
     public void readCSVDisordered(BufferedReader bfr) throws Exception {
         blocs = new ArrayList<>();
         String line;
@@ -122,16 +90,8 @@ public class CSVInserter {
         }
     }
     
-    public void readCSVOrdered(InputStream input) throws Exception{
-        readCSVOrdered(new BufferedReader(new InputStreamReader(input,"UTF-8")));
-    }
-    
     public void readCSVDisordered(InputStream input) throws Exception{
         readCSVDisordered(new BufferedReader(new InputStreamReader(input,"UTF-8")));
-    }
-    
-    public void readCSVOrdered(String filePath) throws Exception{
-        readCSVOrdered(new BufferedReader(new FileReader(filePath)));
     }
     
     public void readCSVDisordered(String filePath) throws Exception{

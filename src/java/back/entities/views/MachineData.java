@@ -24,8 +24,18 @@ public class MachineData {
     double totalPratique;
     @Column(name="perte")
     double perte;
-    
+    @Column(name="volume")
+    double volume;
+
     /*Getters and Setters*/
+    public void setVolume(double volume) {    
+        this.volume = volume;
+    }
+    
+    public double getVolume() {
+        return this.volume;
+    }
+
     public String getIdMachine() {
         return idMachine;
     }

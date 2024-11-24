@@ -28,11 +28,11 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
-        id_machine,
-        totaltheorique,
-        totalpratique,
-        totaltheorique - totalpratique AS perte,
-        volume
+        subquery.id_machine,
+        subquery.totaltheorique,
+        subquery.totalpratique,
+        subquery.totaltheorique - subquery.totalpratique AS perte,
+        subquery.volume
     FROM (
         SELECT 
             bloc.id_machine,

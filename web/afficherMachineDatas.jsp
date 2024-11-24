@@ -19,10 +19,21 @@
 <body>
     <!-- Header with Navbar -->
     <%@include file="header.jsp" %>
-
+    <h1 style="padding: 20px; text-align: center">ETU 002741</h1>
     <!-- Main Content -->
     <main class="container">
+        <a href="afficherMachines">Voir tout</a>             
+        <form action="afficherAnnee" method="get" style="padding: 20px">
+            <h1>Choisissez une annee</h1>
+            <select name="year">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+            <input class="btn btn-primary" type="submit" value="Valider">
+        </form>
         <% DecimalFormat formatter=new DecimalFormat("#.########"); %>
+        <h2><%= request.getParameter("year") %></h2>
         <table class="table-responsive table-bordered">
             <thead>
                 <tr>
@@ -38,6 +49,9 @@
                     <th>
                         Pertes
                     </th>
+                    <th>
+                        Volume
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -49,12 +63,13 @@
                         <td><%= formatter.format(machineData.getTotalTheorique())%></td>
                         <td><%= formatter.format(machineData.getTotalPratique())%></td>
                         <td><%= formatter.format(machineData.getPerte())%></td>
+                        <td><%= formatter.format(machineData.getVolume())%></td>
                     </tr>
                 <% } %>
             </tbody>
             <% MachineData bestMachine=machineDatas.get(0); %>
         </table>
-        <p>La machine avec le minimum de perte est <%= bestMachine.getIdMachine() %> avec une perte de <%= formatter.format(bestMachine.getPerte()) %></p>
+            <h4 style="text-align: center;padding: 20px">Minimum de perte : Machine <%= bestMachine.getIdMachine() %> = <%= formatter.format(bestMachine.getPerte()) %></h4>
     </main>
 
     <!-- Bootstrap JS -->

@@ -23,6 +23,12 @@
         .container {
             margin-top: 20px;
         }
+        table{
+            width: 100%;
+        }
+        th,td{
+            padding: 10px;
+        }
     </style>
 
     <header>
@@ -35,13 +41,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="formulaireInsertCSV.jsp">Inserer blocs CSV</a>
+                            <a class="nav-link" href="formulaireInsertCSV.jsp">Inserer CSV</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="afficherMachines">Détails des machines</a>
+                            <a class="nav-link" href="afficherMachines">Informations machines</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="formulaireAnnee.jsp">Détails annuel des machines</a>
+                            <a class="nav-link" href="formulaireAnnee.jsp">Informations annuelles</a>
                         </li>
                     </ul>
                 </div>
